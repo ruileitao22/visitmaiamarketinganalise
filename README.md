@@ -3,9 +3,6 @@
 Dashboard com autenticação obrigatória, gestão de utilizadores e recolha automática de dados reais:
 
 - Login obrigatório para acesso ao painel
-- Utilizador inicial:
-  - User: `admin`
-  - Pass: `visitmaia`
 - Cada utilizador autenticado pode criar novos utilizadores (email/password)
 - Integração com Google Analytics 4 + Search Console
 - Atualização automática diária (cron)
