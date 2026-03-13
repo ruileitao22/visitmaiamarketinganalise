@@ -13,6 +13,8 @@ const syncBtn = document.getElementById("syncBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
 const currentUserLabel = document.getElementById("currentUserLabel");
+const sidebarLastNavItem = document.querySelector(".sidebar-nav .nav-item:last-child");
+const sidebarFooterEl = document.querySelector(".sidebar-footer");
 
 const kpiGrid = document.getElementById("kpiGrid");
 const lineTotal = document.getElementById("lineTotal");
@@ -71,6 +73,30 @@ function initSidebarBubbles() {
   let lastBubbleAt = 0;
   const minGapMs = 70;
   const maxBubbles = 48;
+  const bubbleRegion = { start: 0, end: Number.POSITIVE_INFINITY };
+
+  function refreshBubbleRegion() {
+    const sidebarRect = sidebarEl.getBoundingClientRect();
+    const scrollTop = sidebarEl.scrollTop;
+
+    if (sidebarLastNavItem) {
+      const lastItemRect = sidebarLastNavItem.getBoundingClientRect();
+      bubbleRegion.start = lastItemRect.bottom - sidebarRect.top + scrollTop + 6;
+    } else {
+      bubbleRegion.start = 0;
+    }
+
+    if (sidebarFooterEl) {
+      const footerRect = sidebarFooterEl.getBoundingClientRect();
+      bubbleRegion.end = footerRect.top - sidebarRect.top + scrollTop - 6;
+    } else {
+      bubbleRegion.end = sidebarEl.scrollHeight;
+    }
+  }
+
+  refreshBubbleRegion();
+  window.addEventListener("resize", refreshBubbleRegion);
+  sidebarEl.addEventListener("scroll", refreshBubbleRegion, { passive: true });
 
   function spawnBubble(x, y, size, driftX, driftY) {
     const bubble = document.createElement("span");
@@ -94,6 +120,7 @@ function initSidebarBubbles() {
     const rect = sidebarEl.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top + sidebarEl.scrollTop;
+    if (y < bubbleRegion.start || y > bubbleRegion.end) return;
 
     const amount = burst ? 3 : 1;
     for (let i = 0; i < amount; i += 1) {
