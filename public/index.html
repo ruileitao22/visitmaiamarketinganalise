@@ -1,0 +1,545 @@
+﻿<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visit Maia Dashboard</title>
+  <link rel="icon" type="image/png" href="Imagens/headmaia.png" />
+  <link rel="shortcut icon" href="Imagens/headmaia.png" />
+  <link rel="apple-touch-icon" href="Imagens/headmaia.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- AUTH -->
+  <section class="auth-screen" id="authScreen">
+    <img src="Imagens/maia.jpg" alt="" class="auth-bg-img" />
+    <div class="auth-overlay"></div>
+    <img src="Imagens/logovisitmaia.png" alt="Visit Maia" class="auth-logo" />
+    <div class="auth-tagline">
+      <h2>Painel de SEO &amp; Analytics</h2>
+      <p>Monitoriza o desempenho do site em tempo real.</p>
+    </div>
+    <div class="auth-center">
+      <article class="auth-card">
+        <h1>Bem-vindo</h1>
+        <p class="auth-sub">Acede ao painel de SEO &amp; Analytics</p>
+        <form id="loginForm" class="auth-form">
+          <div class="field">
+            <label>Utilizador ou Email</label>
+            <input type="text" id="loginIdentifier" placeholder="Utilizador" required />
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="Palavra-Passe" required />
+          </div>
+          <button class="btn-primary" type="submit">Entrar</button>
+        </form>
+        <p class="auth-hint" id="loginMessage"></p>
+      </article>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <div id="appScreen" class="app-shell hidden">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <a href="https://visitmaia.pt/" class="sidebar-logo-link" aria-label="Ir para o site Visit Maia" target="_blank" rel="noopener noreferrer">
+          <img src="Imagens/logovisitmaia.png" alt="Visit Maia" class="sidebar-logo-img" />
+        </a>
+      </div>
+
+      <div class="nav-label">Menu</div>
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-section="overview">
+          <svg viewBox="0 0 20 20" fill="currentColor"><rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/></svg>
+          Visão Geral
+        </a>
+        <a href="#" class="nav-item" data-section="traffic">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
+          Tráfego
+        </a>
+        <a href="#" class="nav-item" data-section="seo">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+          SEO &amp; Pesquisas
+        </a>
+        <a href="#" class="nav-item" data-section="audience">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zm8 0a3 3 0 11-6 0 3 3 0 016 0zM9.555 9.168A5.975 5.975 0 016 10H4a2 2 0 00-2 2v2a2 2 0 002 2h12a2 2 0 002-2v-2a2 2 0 00-2-2h-2a5.975 5.975 0 01-3.445-.832z"/></svg>
+          Público
+        </a>
+        <a href="#" class="nav-item" data-section="funnel">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L13 10.414V15a1 1 0 01-.553.894l-4 2A1 1 0 017 17v-6.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd"/></svg>
+          Funil
+        </a>
+        <a href="#" class="nav-item" data-section="compare">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M5 12a1 1 0 102 0V6.414l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L5 6.414V12zm10-4a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/></svg>
+          Comparações
+        </a>
+        <a href="#" class="nav-item" data-section="seo-agent">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a1 1 0 01.95.684l1.03 3.088a1 1 0 00.632.632l3.088 1.03a1 1 0 010 1.898l-3.088 1.03a1 1 0 00-.632.632l-1.03 3.088a1 1 0 01-1.898 0l-1.03-3.088a1 1 0 00-.632-.632L4.332 9.332a1 1 0 010-1.898l3.088-1.03a1 1 0 00.632-.632l1.03-3.088A1 1 0 0110 2z"/><circle cx="15.5" cy="15.5" r="2.5"/></svg>
+          Agente SEO
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-title">Conta</div>
+        <div class="sidebar-user-info" id="currentUserLabel">—</div>
+        <a href="#" class="nav-item nav-item-account" data-section="users">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+          Utilizadores
+        </a>
+        <a href="#" class="nav-item nav-item-danger" data-section="password">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 8a5 5 0 1110 0v1h.5A1.5 1.5 0 0117 10.5v6A1.5 1.5 0 0115.5 18h-11A1.5 1.5 0 013 16.5v-6A1.5 1.5 0 014.5 9H5V8zm2 1h6V8a3 3 0 10-6 0v1z" clip-rule="evenodd"/></svg>
+          Alterar Password
+        </a>
+        <button class="btn-logout" id="logoutBtn">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 01-1 1H1a1 1 0 010-2h1V4H1a1 1 0 010-2h2zm9.293 3.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L13.586 11H7a1 1 0 110-2h6.586l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          Terminar sessão
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+      <header class="main-topbar">
+        <div class="topbar-left">
+          <h2 class="page-title" id="pageTitle">Visão Geral</h2>
+          <div class="status-badge" id="statusMsg">A carregar...</div>
+        </div>
+        <div class="topbar-right">
+          <select id="mobileSectionSelect" class="mobile-section-select" aria-label="Escolher secção">
+            <option value="overview" selected>Visão Geral</option>
+            <option value="traffic">Tráfego</option>
+            <option value="seo">SEO &amp; Pesquisas</option>
+            <option value="audience">Público</option>
+            <option value="funnel">Funil</option>
+            <option value="compare">Comparações</option>
+            <option value="seo-agent">Agente SEO</option>
+            <option value="users">Utilizadores</option>
+            <option value="password">Alterar Password</option>
+          </select>
+          <select id="rangeSelect" class="range-select">
+            <option value="7">Últimos 7 dias</option>
+            <option value="14">Últimos 14 dias</option>
+            <option value="30" selected>Últimos 30 dias</option>
+            <option value="60">Últimos 60 dias</option>
+            <option value="90">Últimos 90 dias</option>
+          </select>
+          <button class="btn-sync" id="syncBtn">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
+            Sincronizar
+          </button>
+        </div>
+      </header>
+
+      <nav class="mobile-quick-nav" id="mobileQuickNav" aria-label="Navegação móvel">
+        <button type="button" class="mobile-nav-item active" data-section="overview">Visão Geral</button>
+        <button type="button" class="mobile-nav-item" data-section="traffic">Tráfego</button>
+        <button type="button" class="mobile-nav-item" data-section="seo">SEO</button>
+        <button type="button" class="mobile-nav-item" data-section="audience">Público</button>
+        <button type="button" class="mobile-nav-item" data-section="funnel">Funil</button>
+        <button type="button" class="mobile-nav-item" data-section="compare">Comparações</button>
+        <button type="button" class="mobile-nav-item" data-section="seo-agent">Agente SEO</button>
+      </nav>
+      <nav class="mobile-account-bar" id="mobileAccountBar" aria-label="Conta móvel">
+        <button type="button" class="mobile-nav-item" data-section="users">Utilizadores</button>
+        <button type="button" class="mobile-nav-item" data-section="password">Alterar Password</button>
+        <button type="button" class="mobile-nav-item mobile-nav-item-logout" id="mobileLogoutBtn">Terminar sessão</button>
+      </nav>
+
+      <!-- OVERVIEW -->
+      <section class="section active" id="sec-overview">
+        <div class="kpi-grid" id="kpiGrid"></div>
+        <div class="grid-2">
+          <div class="card full-width">
+            <div class="card-head">
+              <div>
+                <h3>Evolução de Utilizadores</h3>
+                <p class="card-sub">Volume diário no período selecionado</p>
+              </div>
+              <div class="pill-row">
+                <span class="pill accent" id="lineTotal">—</span>
+                <span class="pill">Início: <strong id="startDate">—</strong></span>
+                <span class="pill">Fim: <strong id="endDate">—</strong></span>
+                <span class="pill">Média: <strong id="dailyAvg">—</strong>/dia</span>
+              </div>
+            </div>
+            <svg class="line-chart" id="trafficSvg" viewBox="0 0 760 220" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="card">
+            <h3>Canais de Aquisição</h3>
+            <p class="card-sub">Como chegam ao site</p>
+            <div class="bar-list" id="channelsList"></div>
+          </div>
+          <div class="card">
+            <h3>Dispositivos</h3>
+            <p class="card-sub">Tipo de acesso</p>
+            <div class="donut-wrap">
+              <div class="donut" id="deviceDonut">
+                <div class="donut-inner">
+                  <div id="deviceMain">0%</div>
+                  <small>Principal</small>
+                </div>
+              </div>
+            </div>
+            <div class="bar-list" id="deviceList"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRAFFIC -->
+      <section class="section hidden" id="sec-traffic">
+        <div class="section-intro">
+          <h3>Análise de Tráfego</h3>
+          <p>Dados detalhados de aquisição e comportamento de utilizadores.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card full-width">
+            <div class="card-head">
+              <div>
+                <h3>Série Temporal de Utilizadores</h3>
+                <p class="card-sub">Evolução no período selecionado</p>
+              </div>
+              <span class="pill accent" id="lineTotalT">—</span>
+            </div>
+            <svg class="line-chart" id="trafficSvgT" viewBox="0 0 760 220" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="card">
+            <h3>Canais de Aquisição</h3>
+            <p class="card-sub">Distribuição por canal</p>
+            <div class="bar-list" id="channelsListT"></div>
+          </div>
+          <div class="card">
+            <h3>Dispositivos</h3>
+            <p class="card-sub">Mobile, desktop e tablet</p>
+            <div class="bar-list" id="deviceListT"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEO -->
+      <section class="section hidden" id="sec-seo">
+        <div class="section-intro">
+          <h3>SEO &amp; Pesquisas</h3>
+          <p>O que os utilizadores pesquisam e quais as páginas com melhor desempenho orgânico.</p>
+        </div>
+        <div class="grid-1">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>O que as pessoas pesquisam</h3>
+                <p class="card-sub">Top queries orgânicas (Search Console) por cliques</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Query</th><th>Cliques</th><th>Impressões</th><th>CTR</th><th>Posição</th></tr></thead>
+                <tbody id="queryTable"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Páginas com melhor desempenho SEO</h3>
+                <p class="card-sub">Top URLs por cliques orgânicos e posição média</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Página</th><th>Cliques</th><th>Impressões</th><th>CTR</th><th>Posição</th></tr></thead>
+                <tbody id="pagesTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEO AGENT -->
+      <section class="section hidden" id="sec-seo-agent">
+        <div class="section-intro">
+          <h3>Agente SEO</h3>
+          <p>Este agente ajuda a criar títulos, descrições e keywords de SEO mais eficazes. Basta partilhar o título e uma breve descrição do conteúdo que vais publicar.</p>
+        </div>
+        <div class="grid-1">
+          <div class="card seo-agent-card">
+            <div class="seo-agent-head">
+              <h3>Assistente de SEO</h3>
+              <span class="dev-chip">Ainda em desenvolvimento...</span>
+            </div>
+            <div class="seo-agent-chat" aria-live="polite">
+              <div class="seo-agent-row">
+                <img src="Imagens/agentevirtual.png" alt="Agente SEO" class="seo-agent-avatar" />
+                <div class="seo-agent-msg bot">Em breve vais poder conversar comigo para receber sugestões de keywords, títulos e descrições otimizadas.</div>
+              </div>
+            </div>
+            <form class="seo-agent-compose" onsubmit="return false;">
+              <input type="text" placeholder="Título e descrição do conteúdo..." disabled />
+              <button type="button" class="btn-primary" disabled>Enviar</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- AUDIENCE -->
+      <section class="section hidden" id="sec-audience">
+        <div class="section-intro">
+          <h3>Público &amp; Audiência</h3>
+          <p>Perfil dos visitantes do site.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Novos vs Recorrentes</h3>
+            <p class="card-sub">Distribuição de visitantes</p>
+            <div class="bar-list" id="audienceList"></div>
+          </div>
+          <div class="card">
+            <h3>Países Principais</h3>
+            <p class="card-sub">Origem geográfica dos utilizadores</p>
+            <div class="bar-list" id="geoList"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FUNNEL -->
+      <section class="section hidden" id="sec-funnel">
+        <div class="section-intro">
+          <h3>Funil de Conversão</h3>
+          <p>Percurso do utilizador desde a entrada até à conversão.</p>
+        </div>
+        <div class="grid-1">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Etapas do Funil</h3>
+                <p class="card-sub">Taxa geral de conversão</p>
+              </div>
+              <span class="pill accent big" id="funnelRate">0%</span>
+            </div>
+            <div class="funnel" id="funnelList"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMPARAÇÕES -->
+      <section class="section hidden" id="sec-compare">
+        <div class="section-intro">
+          <h3>Comparações de Períodos</h3>
+          <p>Evolução de métricas face ao período anterior.</p>
+        </div>
+        <div class="grid-1">
+          <div class="card">
+            <div class="card-head compare-header">
+              <div>
+                <h3>Comparação</h3>
+                <p class="card-sub" id="comparePeriodLabel">—</p>
+              </div>
+              <div class="compare-tabs" id="compareTabs">
+                <button class="compare-tab active" data-period="period7">7 dias</button>
+                <button class="compare-tab" data-period="period14">14 dias</button>
+                <button class="compare-tab" data-period="period30">30 dias</button>
+                <button class="compare-tab" data-period="period90">90 dias</button>
+              </div>
+            </div>
+            <div class="compare-kpis" id="compareKpis"></div>
+            <p class="compare-legend">
+              <span class="legend-dot current"></span> Atual &nbsp;
+              <span class="legend-dot previous"></span> Anterior
+            </p>
+            <svg class="line-chart" id="compareChartSvg" viewBox="0 0 900 220"></svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- USERS -->
+      <section class="section hidden" id="sec-users">
+        <div class="section-intro">
+          <h3>Gestão de Utilizadores</h3>
+          <p>Cria e gere os acessos ao dashboard.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Criar Novo Utilizador</h3>
+            <p class="card-sub">Qualquer utilizador autenticado pode criar novos acessos</p>
+            <form id="createUserForm" class="user-form">
+              <div class="field">
+                <label>Email</label>
+                <input id="newUserEmail" type="email" placeholder="novo@dominio.pt" required />
+              </div>
+              <div class="field">
+                <label>Password</label>
+                <input id="newUserPassword" type="password" placeholder="mínimo 6 caracteres" required />
+              </div>
+              <div class="field">
+                <label>Username <span class="optional">(opcional)</span></label>
+                <input id="newUsername" type="text" placeholder="ex: maria.silva" />
+              </div>
+              <button class="btn-primary" type="submit">Criar Utilizador</button>
+            </form>
+            <p class="form-msg" id="userMessage"></p>
+          </div>
+          <div class="card">
+            <h3>Utilizadores com Acesso</h3>
+            <p class="card-sub">Contas registadas no dashboard</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Username</th><th>Email</th><th>Criado em</th><th>Ações</th></tr></thead>
+                <tbody id="usersTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PASSWORD -->
+      <section class="section hidden" id="sec-password">
+        <div class="section-intro">
+          <h3>Alterar Password</h3>
+          <p>Atualiza a tua palavra-passe de acesso.</p>
+        </div>
+        <div class="grid-1">
+          <div class="card">
+            <h3>Segurança da Conta</h3>
+            <p class="card-sub">Indica a password atual e a nova password duas vezes.</p>
+            <form id="changePasswordForm" class="user-form">
+              <div class="field">
+                <label>Password Atual</label>
+                <input id="currentPassword" type="password" placeholder="password atual" required />
+              </div>
+              <div class="field">
+                <label>Nova Password</label>
+                <input id="newPassword" type="password" placeholder="mínimo 6 caracteres" required />
+              </div>
+              <div class="field">
+                <label>Confirmar Nova Password</label>
+                <input id="confirmPassword" type="password" placeholder="repetir nova password" required />
+              </div>
+              <button class="btn-primary" type="submit">Alterar Password</button>
+            </form>
+            <p class="form-msg" id="passwordMessage"></p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    const sectionTitles = {
+      overview: 'Visão Geral',
+      traffic:  'Tráfego',
+      seo:      'SEO & Pesquisas',
+      'seo-agent': 'Agente SEO',
+      audience: 'Público',
+      funnel:   'Funil de Conversão',
+      compare:  'Comparações de Períodos',
+      users:    'Utilizadores',
+      password: 'Alterar Password'
+    };
+
+    const navItems = Array.from(document.querySelectorAll('.nav-item'));
+    const mobileNavItems = Array.from(document.querySelectorAll('.mobile-nav-item[data-section]'));
+    const sections = Array.from(document.querySelectorAll('.section'));
+    const pageTitleEl = document.getElementById('pageTitle');
+    const mobileSectionSelect = document.getElementById('mobileSectionSelect');
+    const rangeSelectEl = document.getElementById('rangeSelect');
+
+    function getDashboardData() {
+      try {
+        if (typeof currentData !== 'undefined') return currentData;
+      } catch (_) {
+        // no-op
+      }
+      return window.currentData || null;
+    }
+
+    function renderTrafficTab(data) {
+      const series = data.trafficSeries || [];
+      const range = Number(rangeSelectEl?.value || 30);
+      const view = series.slice(-range);
+      const values = view.map(i => Number(i.users || 0));
+      drawLineChart(document.getElementById('trafficSvgT'), values.length ? values : [0]);
+      document.getElementById('lineTotalT').textContent = document.getElementById('lineTotal').textContent;
+      renderBars(document.getElementById('channelsListT'), data.channels || []);
+      renderBars(document.getElementById('deviceListT'), data.devices || []);
+    }
+
+    function renderCompareTab() {
+      const selectedPeriod = document.querySelector('.compare-tab.active')?.dataset.period || 'period7';
+      renderCompare(selectedPeriod);
+      document.querySelectorAll('.compare-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.period === selectedPeriod);
+      });
+    }
+
+    function setActiveSection(sec) {
+      if (!sectionTitles[sec]) return;
+
+      navItems.forEach(i => i.classList.toggle('active', i.dataset.section === sec));
+      mobileNavItems.forEach(i => i.classList.toggle('active', i.dataset.section === sec));
+      sections.forEach(s => {
+        const active = s.id === `sec-${sec}`;
+        s.classList.toggle('active', active);
+        s.classList.toggle('hidden', !active);
+      });
+
+      pageTitleEl.textContent = sectionTitles[sec] || sec;
+      if (mobileSectionSelect && mobileSectionSelect.value !== sec) {
+        mobileSectionSelect.value = sec;
+      }
+
+      const data = getDashboardData();
+      if (sec === 'traffic' && data) renderTrafficTab(data);
+      if (sec === 'compare' && data) renderCompareTab();
+    }
+
+    navItems.forEach(item => {
+      item.addEventListener('click', e => {
+        e.preventDefault();
+        setActiveSection(item.dataset.section);
+      });
+    });
+
+    mobileNavItems.forEach(item => {
+      item.addEventListener('click', () => {
+        setActiveSection(item.dataset.section);
+      });
+    });
+
+    if (mobileSectionSelect) {
+      mobileSectionSelect.addEventListener('change', e => {
+        setActiveSection(e.target.value);
+      });
+    }
+
+    if (rangeSelectEl) {
+      rangeSelectEl.addEventListener('change', () => {
+        const trafficVisible = document.getElementById('sec-traffic')?.classList.contains('active');
+        const data = getDashboardData();
+        if (trafficVisible && data) renderTrafficTab(data);
+      });
+    }
+
+    document.addEventListener('click', e => {
+      if (e.target.classList.contains('compare-tab')) {
+        document.querySelectorAll('.compare-tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        renderCompare(e.target.dataset.period);
+      }
+    });
+
+    const initialSection = document.querySelector('.nav-item.active')?.dataset.section || 'overview';
+    setActiveSection(initialSection);
+  </script>
+</body>
+</html>
+
+
+
+

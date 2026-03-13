@@ -1,0 +1,20 @@
+﻿{
+  "name": "visitmaia-dashboard",
+  "version": "1.0.0",
+  "description": "Dashboard SEO + Analytics com login e integração GA4/Search Console",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "googleapis": "^150.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "node-cron": "^3.0.3"
+  }
+}

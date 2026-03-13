@@ -1,0 +1,7 @@
+﻿node_modules/
+.env
+dashboard-store.json
+*.db
+*.db-shm
+*.db-wal
+service-account.json
