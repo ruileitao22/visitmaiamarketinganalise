@@ -13,8 +13,6 @@ const syncBtn = document.getElementById("syncBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
 const currentUserLabel = document.getElementById("currentUserLabel");
-const sidebarLastNavItem = document.querySelector(".sidebar-nav .nav-item:last-child");
-const sidebarFooterEl = document.querySelector(".sidebar-footer");
 
 const kpiGrid = document.getElementById("kpiGrid");
 const lineTotal = document.getElementById("lineTotal");
@@ -43,7 +41,6 @@ const currentPasswordInput = document.getElementById("currentPassword");
 const newPasswordInput = document.getElementById("newPassword");
 const confirmPasswordInput = document.getElementById("confirmPassword");
 const passwordMessage = document.getElementById("passwordMessage");
-const sidebarEl = document.querySelector(".sidebar");
 
 let currentData = null;
 let currentUser = null;
@@ -58,92 +55,7 @@ const brandColors = {
   label: "#5f7580"
 };
 
-initSidebarBubbles();
 bootstrap();
-
-function initSidebarBubbles() {
-  if (!sidebarEl) return;
-  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-  if (window.innerWidth <= 860) return;
-
-  const layer = document.createElement("div");
-  layer.className = "sidebar-bubble-layer";
-  sidebarEl.insertBefore(layer, sidebarEl.firstChild);
-
-  let lastBubbleAt = 0;
-  const minGapMs = 70;
-  const maxBubbles = 48;
-  const bubbleRegion = { start: 0, end: Number.POSITIVE_INFINITY };
-
-  function refreshBubbleRegion() {
-    const sidebarRect = sidebarEl.getBoundingClientRect();
-    const scrollTop = sidebarEl.scrollTop;
-
-    if (sidebarLastNavItem) {
-      const lastItemRect = sidebarLastNavItem.getBoundingClientRect();
-      bubbleRegion.start = lastItemRect.bottom - sidebarRect.top + scrollTop + 6;
-    } else {
-      bubbleRegion.start = 0;
-    }
-
-    if (sidebarFooterEl) {
-      const footerRect = sidebarFooterEl.getBoundingClientRect();
-      bubbleRegion.end = footerRect.top - sidebarRect.top + scrollTop - 6;
-    } else {
-      bubbleRegion.end = sidebarEl.scrollHeight;
-    }
-  }
-
-  refreshBubbleRegion();
-  window.addEventListener("resize", refreshBubbleRegion);
-  sidebarEl.addEventListener("scroll", refreshBubbleRegion, { passive: true });
-
-  function spawnBubble(x, y, size, driftX, driftY) {
-    const bubble = document.createElement("span");
-    bubble.className = "sidebar-bubble";
-    bubble.style.left = `${x}px`;
-    bubble.style.top = `${y}px`;
-    bubble.style.width = `${size}px`;
-    bubble.style.height = `${size}px`;
-    bubble.style.setProperty("--bubble-drift-x", `${driftX}px`);
-    bubble.style.setProperty("--bubble-drift-y", `${driftY}px`);
-    layer.appendChild(bubble);
-
-    if (layer.childElementCount > maxBubbles) {
-      layer.firstElementChild?.remove();
-    }
-
-    bubble.addEventListener("animationend", () => bubble.remove(), { once: true });
-  }
-
-  function emitAt(event, burst = false) {
-    const rect = sidebarEl.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top + sidebarEl.scrollTop;
-    if (y < bubbleRegion.start || y > bubbleRegion.end) return;
-
-    const amount = burst ? 3 : 1;
-    for (let i = 0; i < amount; i += 1) {
-      const size = 5 + Math.random() * 8;
-      const driftX = (Math.random() - 0.5) * 26;
-      const driftY = -34 - Math.random() * 28;
-      const jitterX = (Math.random() - 0.5) * 14;
-      const jitterY = (Math.random() - 0.5) * 10;
-      spawnBubble(x + jitterX, y + jitterY, size, driftX, driftY);
-    }
-  }
-
-  sidebarEl.addEventListener("pointermove", (event) => {
-    const now = Date.now();
-    if (now - lastBubbleAt < minGapMs) return;
-    lastBubbleAt = now;
-    emitAt(event, false);
-  });
-
-  sidebarEl.addEventListener("mouseenter", (event) => {
-    emitAt(event, true);
-  });
-}
 
 async function bootstrap() {
   try {
