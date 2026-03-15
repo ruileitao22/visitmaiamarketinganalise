@@ -68,6 +68,10 @@
           <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
           SEO &amp; Pesquisas
         </a>
+        <a href="#" class="nav-item" data-section="social">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M7.5 10a2.5 2.5 0 110-5 2.5 2.5 0 010 5zm5.5 8a2.5 2.5 0 110-5 2.5 2.5 0 010 5zM14.5 6a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"/><path d="M9.42 8.93l2.9-2.07.58.81L10 9.74l-.58-.81zm.58 2.13l2.9 2.07-.58.81-2.9-2.07.58-.81z"/></svg>
+          Social Media
+        </a>
         <a href="#" class="nav-item" data-section="audience">
           <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zm8 0a3 3 0 11-6 0 3 3 0 016 0zM9.555 9.168A5.975 5.975 0 016 10H4a2 2 0 00-2 2v2a2 2 0 002 2h12a2 2 0 002-2v-2a2 2 0 00-2-2h-2a5.975 5.975 0 01-3.445-.832z"/></svg>
           Público
@@ -116,6 +120,7 @@
             <option value="overview" selected>Visão Geral</option>
             <option value="traffic">Tráfego</option>
             <option value="seo">SEO &amp; Pesquisas</option>
+            <option value="social">Social Media</option>
             <option value="audience">Público</option>
             <option value="funnel">Funil</option>
             <option value="compare">Comparações</option>
@@ -141,6 +146,7 @@
         <button type="button" class="mobile-nav-item active" data-section="overview">Visão Geral</button>
         <button type="button" class="mobile-nav-item" data-section="traffic">Tráfego</button>
         <button type="button" class="mobile-nav-item" data-section="seo">SEO</button>
+        <button type="button" class="mobile-nav-item" data-section="social">Social</button>
         <button type="button" class="mobile-nav-item" data-section="audience">Público</button>
         <button type="button" class="mobile-nav-item" data-section="funnel">Funil</button>
         <button type="button" class="mobile-nav-item" data-section="compare">Comparações</button>
@@ -255,6 +261,30 @@
                 <thead><tr><th>Página</th><th>Cliques</th><th>Impressões</th><th>CTR</th><th>Posição</th></tr></thead>
                 <tbody id="pagesTable"></tbody>
               </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SOCIAL -->
+      <section class="section hidden" id="sec-social">
+        <div class="section-intro">
+          <h3>Análise de Social Media</h3>
+          <p>Resumo de desempenho dos conteúdos e interação nas redes sociais.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Estado da Integração</h3>
+            <p class="card-sub">Conexão de plataformas sociais</p>
+            <p class="form-msg">Em breve: ligação a Instagram, Facebook e TikTok para análise automática.</p>
+          </div>
+          <div class="card">
+            <h3>Indicadores-Chave</h3>
+            <p class="card-sub">Métricas de alcance e engagement</p>
+            <div class="bar-list">
+              <div class="bar-row"><span>Alcance</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><strong>0</strong></div>
+              <div class="bar-row"><span>Engagement</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><strong>0%</strong></div>
+              <div class="bar-row"><span>Cliques</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><strong>0</strong></div>
             </div>
           </div>
         </div>
@@ -435,6 +465,7 @@
       overview: 'Visão Geral',
       traffic:  'Tráfego',
       seo:      'SEO & Pesquisas',
+      social:   'Análise de Social Media',
       'seo-agent': 'Agente SEO',
       audience: 'Público',
       funnel:   'Funil de Conversão',
