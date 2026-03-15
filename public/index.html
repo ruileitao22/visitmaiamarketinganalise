@@ -270,21 +270,126 @@
       <section class="section hidden" id="sec-social">
         <div class="section-intro">
           <h3>Análise de Social Media</h3>
-          <p>Resumo de desempenho dos conteúdos e interação nas redes sociais.</p>
+          <p>Painel profissional para monitorizar crescimento, alcance, envolvimento e desempenho de conteúdos em LinkedIn, Facebook e Instagram.</p>
         </div>
         <div class="grid-2">
           <div class="card">
-            <h3>Estado da Integração</h3>
-            <p class="card-sub">Conexão de plataformas sociais</p>
-            <p class="form-msg">Em breve: ligação a Instagram, Facebook e TikTok para análise automática.</p>
+            <div class="card-head">
+              <div>
+                <h3>Estado da Integração</h3>
+                <p class="card-sub">Para os valores ficarem corretos é necessário ligar as contas e conceder permissões de leitura.</p>
+              </div>
+              <span class="pill">Permissões API necessárias</span>
+            </div>
+            <div class="social-platform-status">
+              <div class="social-platform-item"><strong>LinkedIn</strong><span>Sem permissão</span></div>
+              <div class="social-platform-item"><strong>Facebook</strong><span>Sem permissão</span></div>
+              <div class="social-platform-item"><strong>Instagram</strong><span>Sem permissão</span></div>
+            </div>
+            <p class="card-sub social-capabilities-title">Com permissões ativas, este painel poderá mostrar:</p>
+            <div class="pill-row">
+              <span class="pill">Crescimento de seguidores</span>
+              <span class="pill">Alcance por rede</span>
+              <span class="pill">Taxa de envolvimento</span>
+              <span class="pill">Cliques e tráfego social</span>
+              <span class="pill">Top conteúdos</span>
+              <span class="pill">Evolução diária/semanal/mensal</span>
+            </div>
           </div>
           <div class="card">
-            <h3>Indicadores-Chave</h3>
-            <p class="card-sub">Métricas de alcance e engagement</p>
-            <div class="bar-list">
-              <div class="bar-row"><span>Alcance</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><strong>0</strong></div>
-              <div class="bar-row"><span>Engagement</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><strong>0%</strong></div>
-              <div class="bar-row"><span>Cliques</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><strong>0</strong></div>
+            <h3>Filtros de Visualização</h3>
+            <p class="card-sub">Escolhe a rede, métrica e janela temporal para analisar crescimento.</p>
+            <div class="social-control-grid">
+              <div class="field">
+                <label>Rede Social</label>
+                <select id="socialNetworkSelect">
+                  <option value="all" selected>Todas as redes</option>
+                  <option value="linkedin">LinkedIn</option>
+                  <option value="facebook">Facebook</option>
+                  <option value="instagram">Instagram</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Métrica Principal</label>
+                <select id="socialMetricSelect">
+                  <option value="reach" selected>Alcance</option>
+                  <option value="engagement">Envolvimento</option>
+                  <option value="clicks">Cliques</option>
+                  <option value="followers">Seguidores</option>
+                </select>
+              </div>
+            </div>
+            <div class="social-period-tabs" id="socialPeriodTabs">
+              <button type="button" class="social-period-tab active" data-period="7">7 dias</button>
+              <button type="button" class="social-period-tab" data-period="30">30 dias</button>
+              <button type="button" class="social-period-tab" data-period="90">90 dias</button>
+            </div>
+            <p class="social-zero-note">Sem permissões ativas, os valores permanecem a 0 (simulação).</p>
+          </div>
+        </div>
+
+        <div class="social-kpi-grid" id="socialKpiGrid"></div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Evolução da Métrica Selecionada</h3>
+                <p class="card-sub">Tendência temporal da rede escolhida</p>
+              </div>
+              <span class="pill accent" id="socialMetricLegend">Alcance</span>
+            </div>
+            <svg class="line-chart social-line-chart" id="socialGrowthChart" viewBox="0 0 760 220" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="card">
+            <h3>Comparação por Rede</h3>
+            <p class="card-sub">Distribuição da métrica principal entre LinkedIn, Facebook e Instagram</p>
+            <div class="bar-list social-bar-list" id="socialNetworkBars"></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>Desempenho por Tipo de Conteúdo</h3>
+            <p class="card-sub">Performance média por formato publicado</p>
+            <div class="bar-list social-bar-list" id="socialFormatBars"></div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Crescimento de Seguidores</h3>
+                <p class="card-sub">Evolução de comunidade no período selecionado</p>
+              </div>
+              <span class="pill" id="socialGrowthLegend">Seguidores</span>
+            </div>
+            <svg class="line-chart social-line-chart" id="socialFollowersChart" viewBox="0 0 760 220" preserveAspectRatio="none"></svg>
+          </div>
+        </div>
+
+        <div class="grid-1">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Conteúdos em Destaque</h3>
+                <p class="card-sub">Com permissões ativas, poderás comparar publicações por alcance, envolvimento e crescimento.</p>
+              </div>
+              <span class="pill">Pré-visualização (simulação)</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Rede</th>
+                    <th>Conteúdo</th>
+                    <th>Impressões</th>
+                    <th>Interações</th>
+                    <th>Cliques</th>
+                    <th>Taxa Envolvimento</th>
+                    <th>Crescimento</th>
+                  </tr>
+                </thead>
+                <tbody id="socialPostsTable"></tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -300,17 +405,17 @@
           <div class="card seo-agent-card">
             <div class="seo-agent-head">
               <h3>Assistente de SEO</h3>
-              <span class="dev-chip">Ainda em desenvolvimento...</span>
+              <span class="dev-chip" id="seoAgentStatusChip">n8n (beta)</span>
             </div>
-            <div class="seo-agent-chat" aria-live="polite">
+            <div class="seo-agent-chat" id="seoAgentChat" aria-live="polite">
               <div class="seo-agent-row">
                 <img src="Imagens/agentevirtual.png" alt="Agente SEO" class="seo-agent-avatar" />
-                <div class="seo-agent-msg bot">Em breve vais poder conversar comigo para receber sugestões de keywords, títulos e descrições otimizadas.</div>
+                <div class="seo-agent-msg bot">Escreve o título e uma descrição breve do conteúdo. Eu devolvo sugestões de título SEO, meta descrição e keywords.</div>
               </div>
             </div>
-            <form class="seo-agent-compose" onsubmit="return false;">
-              <input type="text" placeholder="Título e descrição do conteúdo..." disabled />
-              <button type="button" class="btn-primary" disabled>Enviar</button>
+            <form class="seo-agent-compose" id="seoAgentForm">
+              <input type="text" id="seoAgentInput" placeholder="Título e descrição do conteúdo..." maxlength="4000" required />
+              <button type="submit" class="btn-primary" id="seoAgentSendBtn">Enviar</button>
             </form>
           </div>
         </div>

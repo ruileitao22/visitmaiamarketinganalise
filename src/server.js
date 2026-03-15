@@ -20,6 +20,7 @@ const { signUserToken } = require("./services/authService");
 const { requireAuth } = require("./middleware/requireAuth");
 const { getAnalyticsData } = require("./services/analyticsService");
 const { startScheduler } = require("./services/scheduler");
+const { askSeoAgent, isSeoAgentConfigured } = require("./services/seoAgentService");
 
 const app = express();
 
@@ -260,6 +261,48 @@ app.get("/api/dashboard", requireAuth, async (_req, res) => {
 app.post("/api/dashboard/sync", requireAuth, async (_req, res) => {
   const result = await getAnalyticsData({ forceRefresh: true });
   return res.json(result);
+});
+
+app.get("/api/seo-agent/status", requireAuth, (_req, res) => {
+  return res.json({ configured: isSeoAgentConfigured() });
+});
+
+app.post("/api/seo-agent/chat", requireAuth, async (req, res) => {
+  const message = String(req.body.message || "").trim();
+
+  if (!message) {
+    return res.status(400).json({ error: "Escreve uma mensagem para o Agente SEO." });
+  }
+
+  if (message.length > 4000) {
+    return res.status(400).json({ error: "A mensagem é demasiado longa (máximo 4000 caracteres)." });
+  }
+
+  try {
+    const result = await askSeoAgent({ message, user: req.user });
+    return res.json({
+      reply: result.reply,
+      source: "n8n",
+      at: new Date().toISOString()
+    });
+  } catch (err) {
+    if (err && err.code === "SEO_AGENT_NOT_CONFIGURED") {
+      return res.status(503).json({
+        error: "Agente SEO não configurado. Define SEO_AGENT_WEBHOOK_URL no servidor."
+      });
+    }
+
+    if (err && err.name === "AbortError") {
+      return res.status(504).json({
+        error: "O Agente SEO demorou demasiado tempo a responder. Tenta novamente."
+      });
+    }
+
+    console.error("[seo-agent] erro ao contactar n8n:", err && err.message ? err.message : err);
+    return res.status(502).json({
+      error: "Não foi possível obter resposta do Agente SEO no n8n."
+    });
+  }
 });
 
 app.use((err, _req, res, _next) => {

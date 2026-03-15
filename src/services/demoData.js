@@ -103,7 +103,7 @@
     ],
     funnel: [
       { stage: "Sessões", value: 67720 },
-      { stage: "Sessões Engajadas", value: 43860 },
+      { stage: "Sessões Envolvidas", value: 43860 },
       { stage: "Cliques em Conteúdo", value: 12730 },
       { stage: "Leads/Contactos", value: 1380 }
     ],

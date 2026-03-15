@@ -29,6 +29,17 @@ const audienceList = document.getElementById("audienceList");
 const geoList = document.getElementById("geoList");
 const funnelList = document.getElementById("funnelList");
 const funnelRate = document.getElementById("funnelRate");
+const socialNetworkSelect = document.getElementById("socialNetworkSelect");
+const socialMetricSelect = document.getElementById("socialMetricSelect");
+const socialPeriodTabs = document.getElementById("socialPeriodTabs");
+const socialKpiGrid = document.getElementById("socialKpiGrid");
+const socialMetricLegend = document.getElementById("socialMetricLegend");
+const socialGrowthLegend = document.getElementById("socialGrowthLegend");
+const socialGrowthChart = document.getElementById("socialGrowthChart");
+const socialFollowersChart = document.getElementById("socialFollowersChart");
+const socialNetworkBars = document.getElementById("socialNetworkBars");
+const socialFormatBars = document.getElementById("socialFormatBars");
+const socialPostsTable = document.getElementById("socialPostsTable");
 
 const createUserForm = document.getElementById("createUserForm");
 const newUserEmail = document.getElementById("newUserEmail");
@@ -41,9 +52,15 @@ const currentPasswordInput = document.getElementById("currentPassword");
 const newPasswordInput = document.getElementById("newPassword");
 const confirmPasswordInput = document.getElementById("confirmPassword");
 const passwordMessage = document.getElementById("passwordMessage");
+const seoAgentForm = document.getElementById("seoAgentForm");
+const seoAgentInput = document.getElementById("seoAgentInput");
+const seoAgentSendBtn = document.getElementById("seoAgentSendBtn");
+const seoAgentChat = document.getElementById("seoAgentChat");
+const seoAgentStatusChip = document.getElementById("seoAgentStatusChip");
 
 let currentData = null;
 let currentUser = null;
+let seoAgentBusy = false;
 const defaultAdminUsername = "admin";
 window.currentData = null;
 const brandColors = {
@@ -55,6 +72,34 @@ const brandColors = {
   label: "#5f7580"
 };
 
+const socialState = {
+  network: "all",
+  metric: "reach",
+  period: 7
+};
+
+const socialNetworkLabels = {
+  all: "Todas as redes",
+  linkedin: "LinkedIn",
+  facebook: "Facebook",
+  instagram: "Instagram"
+};
+
+const socialMetricLabels = {
+  reach: "Alcance",
+  engagement: "Envolvimento",
+  clicks: "Cliques",
+  followers: "Seguidores"
+};
+
+const socialMetricModes = {
+  reach: "int",
+  engagement: "pct",
+  clicks: "int",
+  followers: "int"
+};
+
+initSocialControls();
 bootstrap();
 
 async function bootstrap() {
@@ -175,6 +220,13 @@ changePasswordForm.addEventListener("submit", async (e) => {
   }
 });
 
+if (seoAgentForm) {
+  seoAgentForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    await sendSeoAgentMessage();
+  });
+}
+
 usersTable.addEventListener("click", async (e) => {
   const button = e.target.closest(".btn-delete-user");
   if (!button) return;
@@ -269,6 +321,93 @@ function showApp() {
   currentUserLabel.textContent = currentUser
     ? `Sessão: ${currentUser.username} (${currentUser.email})`
     : "";
+  loadSeoAgentStatus();
+}
+
+async function loadSeoAgentStatus() {
+  if (!seoAgentStatusChip) return;
+
+  setSeoAgentChip("A validar ligação...", "loading");
+  try {
+    const status = await apiFetch("/api/seo-agent/status");
+    if (status && status.configured) {
+      setSeoAgentChip("n8n ligado", "ok");
+    } else {
+      setSeoAgentChip("n8n por configurar", "warn");
+    }
+  } catch (_) {
+    setSeoAgentChip("n8n indisponível", "warn");
+  }
+}
+
+function setSeoAgentChip(text, tone) {
+  if (!seoAgentStatusChip) return;
+  seoAgentStatusChip.textContent = text;
+  seoAgentStatusChip.classList.remove("loading", "ok", "warn");
+  if (tone) seoAgentStatusChip.classList.add(tone);
+}
+
+function setSeoAgentBusy(isBusy) {
+  seoAgentBusy = isBusy;
+  if (seoAgentSendBtn) seoAgentSendBtn.disabled = isBusy;
+  if (seoAgentInput) seoAgentInput.disabled = isBusy;
+}
+
+async function sendSeoAgentMessage() {
+  if (!seoAgentInput || !seoAgentChat) return;
+  if (seoAgentBusy) return;
+
+  const message = seoAgentInput.value.trim();
+  if (!message) return;
+
+  appendSeoAgentMessage("user", message);
+  seoAgentInput.value = "";
+  setSeoAgentBusy(true);
+  setSeoAgentChip("A consultar n8n...", "loading");
+
+  const typingRow = appendSeoAgentMessage("typing", "A gerar sugestões SEO...");
+
+  try {
+    const response = await apiFetch("/api/seo-agent/chat", {
+      method: "POST",
+      body: JSON.stringify({ message })
+    });
+
+    if (typingRow && typingRow.parentNode) typingRow.parentNode.removeChild(typingRow);
+    appendSeoAgentMessage("bot", response.reply || "Recebi a tua mensagem, mas sem texto de resposta.");
+    setSeoAgentChip("n8n ligado", "ok");
+  } catch (err) {
+    if (typingRow && typingRow.parentNode) typingRow.parentNode.removeChild(typingRow);
+    appendSeoAgentMessage("bot", err.message || "Não foi possível contactar o Agente SEO.");
+    setSeoAgentChip("erro de ligação", "warn");
+  } finally {
+    setSeoAgentBusy(false);
+    seoAgentInput?.focus();
+  }
+}
+
+function appendSeoAgentMessage(role, text) {
+  if (!seoAgentChat) return null;
+
+  const row = document.createElement("div");
+  row.className = `seo-agent-row ${role === "user" ? "user" : "bot"}`;
+
+  if (role !== "user") {
+    const avatar = document.createElement("img");
+    avatar.src = "Imagens/agentevirtual.png";
+    avatar.alt = "Agente SEO";
+    avatar.className = "seo-agent-avatar";
+    row.appendChild(avatar);
+  }
+
+  const msg = document.createElement("div");
+  msg.className = `seo-agent-msg ${role === "user" ? "user" : role === "typing" ? "typing" : "bot"}`;
+  msg.textContent = String(text || "");
+  row.appendChild(msg);
+
+  seoAgentChat.appendChild(row);
+  seoAgentChat.scrollTop = seoAgentChat.scrollHeight;
+  return row;
 }
 
 function canDeleteUser(user) {
@@ -310,6 +449,7 @@ function renderAll() {
   renderQueryTable(currentData.topQueries || []);
   renderPagesTable(currentData.topPages || []);
   renderAudience(currentData.audience || {});
+  renderSocialPanel();
   renderFunnel(currentData.funnel || []);
   renderCompare("period7");
 
@@ -493,6 +633,216 @@ function renderAudience(audience) {
   renderBars(geoList, audience.countries || []);
 }
 
+function initSocialControls() {
+  if (socialNetworkSelect) {
+    socialNetworkSelect.value = socialState.network;
+    socialNetworkSelect.addEventListener("change", () => {
+      socialState.network = socialNetworkSelect.value || "all";
+      renderSocialPanel();
+    });
+  }
+
+  if (socialMetricSelect) {
+    socialMetricSelect.value = socialState.metric;
+    socialMetricSelect.addEventListener("change", () => {
+      socialState.metric = socialMetricSelect.value || "reach";
+      renderSocialPanel();
+    });
+  }
+
+  if (socialPeriodTabs) {
+    const tabs = Array.from(socialPeriodTabs.querySelectorAll(".social-period-tab"));
+    tabs.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const next = Number(btn.dataset.period || 7);
+        socialState.period = Number.isFinite(next) ? next : 7;
+        tabs.forEach((b) => b.classList.toggle("active", b === btn));
+        renderSocialPanel();
+      });
+    });
+  }
+
+  renderSocialPanel();
+}
+
+function renderSocialPanel() {
+  if (!socialKpiGrid) return;
+
+  const networkLabel = socialNetworkLabels[socialState.network] || socialNetworkLabels.all;
+  const metricLabel = socialMetricLabels[socialState.metric] || socialMetricLabels.reach;
+  const metricMode = socialMetricModes[socialState.metric] || "int";
+  const periodDays = Number(socialState.period || 7);
+
+  if (socialMetricLegend) {
+    socialMetricLegend.textContent = `${metricLabel} · ${networkLabel}`;
+  }
+  if (socialGrowthLegend) {
+    socialGrowthLegend.textContent = `Seguidores · ${networkLabel}`;
+  }
+
+  const kpis = [
+    { label: "Alcance total", value: formatSocialValue(0, "int"), trend: "0,0% vs período anterior" },
+    { label: "Interações", value: formatSocialValue(0, "int"), trend: "0,0% vs período anterior" },
+    { label: "Cliques no link", value: formatSocialValue(0, "int"), trend: "0,0% vs período anterior" },
+    { label: "Seguidores ganhos", value: formatSocialValue(0, "int"), trend: "0,0% vs período anterior" },
+    { label: "Taxa de envolvimento", value: formatSocialValue(0, "pct"), trend: "0,0 p.p. vs período anterior" },
+    { label: "Publicações", value: formatSocialValue(0, "int"), trend: "0 publicações no período" }
+  ];
+
+  socialKpiGrid.innerHTML = kpis
+    .map(
+      (k) => `
+      <article class="social-kpi-card">
+        <span class="social-kpi-label">${escapeHtml(k.label)}</span>
+        <strong class="social-kpi-value">${escapeHtml(k.value)}</strong>
+        <span class="social-kpi-trend">${escapeHtml(k.trend)}</span>
+      </article>
+    `
+    )
+    .join("");
+
+  const zeroSeries = buildZeroSeries(periodDays);
+  drawSocialLineChart(socialGrowthChart, zeroSeries, metricMode);
+  drawSocialLineChart(socialFollowersChart, zeroSeries, "int");
+
+  const networkRows = [
+    { name: "LinkedIn", value: 0 },
+    { name: "Facebook", value: 0 },
+    { name: "Instagram", value: 0 }
+  ];
+  renderSocialBars(socialNetworkBars, networkRows, metricMode);
+
+  const formatRows = [
+    { name: "Imagem/Post", value: 0 },
+    { name: "Carrossel", value: 0 },
+    { name: "Vídeo/Reel", value: 0 },
+    { name: "Story", value: 0 }
+  ];
+  renderSocialBars(socialFormatBars, formatRows, metricMode);
+
+  const posts = [
+    { network: "LinkedIn", content: "Publicação institucional", impressions: 0, interactions: 0, clicks: 0, engagementRate: 0, growth: 0 },
+    { network: "Facebook", content: "Evento cultural em destaque", impressions: 0, interactions: 0, clicks: 0, engagementRate: 0, growth: 0 },
+    { network: "Instagram", content: "Roteiro turístico da semana", impressions: 0, interactions: 0, clicks: 0, engagementRate: 0, growth: 0 },
+    { network: "Instagram", content: "Reel de experiência local", impressions: 0, interactions: 0, clicks: 0, engagementRate: 0, growth: 0 }
+  ];
+
+  if (socialPostsTable) {
+    socialPostsTable.innerHTML = posts
+      .map(
+        (post) => `
+        <tr>
+          <td>${escapeHtml(post.network)}</td>
+          <td>${escapeHtml(post.content)}</td>
+          <td>${formatInt(post.impressions)}</td>
+          <td>${formatInt(post.interactions)}</td>
+          <td>${formatInt(post.clicks)}</td>
+          <td>${toPct(post.engagementRate)}</td>
+          <td>${toPct(post.growth)}</td>
+        </tr>
+      `
+      )
+      .join("");
+  }
+}
+
+function buildZeroSeries(days) {
+  const size = Math.max(2, Number(days || 7));
+  const series = [];
+  for (let i = 0; i < size; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() - (size - 1 - i));
+    const dd = String(d.getDate()).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    series.push({ label: `${dd}/${mm}`, value: 0 });
+  }
+  return series;
+}
+
+function renderSocialBars(target, rows, mode) {
+  if (!target) return;
+  const safeRows = rows || [];
+  const max = Math.max(...safeRows.map((r) => Number(r.value || 0)), 0);
+
+  target.innerHTML = safeRows
+    .map((row) => {
+      const value = Number(row.value || 0);
+      const width = max > 0 ? (value / max) * 100 : 0;
+      return `
+        <div class="bar-row">
+          <span>${escapeHtml(row.name)}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${width.toFixed(1)}%"></div></div>
+          <strong>${escapeHtml(formatSocialValue(value, mode))}</strong>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function formatSocialValue(value, mode) {
+  if (mode === "pct") return toPct(value);
+  return formatInt(value);
+}
+
+function drawSocialLineChart(svg, series, mode) {
+  if (!svg) return;
+  const values = (series || []).map((item) => Number(item.value || 0));
+  const labels = (series || []).map((item) => item.label || "");
+
+  const W = 760;
+  const H = 220;
+  const pL = 46;
+  const pR = 16;
+  const pT = 14;
+  const pB = 28;
+  const gW = W - pL - pR;
+  const gH = H - pT - pB;
+  const min = Math.min(...values, 0);
+  const max = Math.max(...values, 0);
+  const span = Math.max(max - min, 1);
+
+  const px = (i) => pL + (i / Math.max(values.length - 1, 1)) * gW;
+  const py = (v) => pT + gH - ((v - min) / span) * gH;
+  const yFmt = (v) => (mode === "pct" ? toPct(v) : formatInt(v));
+  const gradId = `${svg.id}-grad`;
+
+  let grid = "";
+  for (let i = 0; i <= 4; i++) {
+    const ratio = i / 4;
+    const y = pT + ratio * gH;
+    const value = max - ratio * (max - min);
+    grid += `<line x1="${pL}" y1="${y.toFixed(1)}" x2="${W - pR}" y2="${y.toFixed(1)}" stroke="${brandColors.grid}" stroke-dasharray="4 6" />`;
+    grid += `<text x="${pL - 8}" y="${(y + 4).toFixed(1)}" text-anchor="end" class="chart-label">${escapeHtml(yFmt(value))}</text>`;
+  }
+
+  let xAxis = "";
+  const xStep = Math.max(1, Math.floor(values.length / 4));
+  for (let i = 0; i < values.length; i += xStep) {
+    xAxis += `<text x="${px(i).toFixed(1)}" y="${H - 8}" text-anchor="middle" class="chart-label">${escapeHtml(labels[i])}</text>`;
+  }
+  xAxis += `<text x="${px(values.length - 1).toFixed(1)}" y="${H - 8}" text-anchor="middle" class="chart-label">${escapeHtml(labels[values.length - 1] || "")}</text>`;
+
+  const points = values.map((v, i) => [px(i), py(v)]);
+  const linePath = points
+    .map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`)
+    .join(" ");
+  const areaPath = `${linePath} L${px(values.length - 1).toFixed(1)},${(pT + gH).toFixed(1)} L${pL},${(pT + gH).toFixed(1)} Z`;
+
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="rgba(0,168,198,0.28)" />
+        <stop offset="100%" stop-color="rgba(0,168,198,0.04)" />
+      </linearGradient>
+    </defs>
+    ${grid}
+    ${xAxis}
+    <path d="${areaPath}" fill="url(#${gradId})" />
+    <path d="${linePath}" fill="none" stroke="${brandColors.primary}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+    ${points.map(([x, y]) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.2" fill="#fff" stroke="${brandColors.primary}" stroke-width="2" />`).join("")}
+  `;
+}
+
 function renderFunnel(steps) {
   const normalized = steps || [];
   const first = Number(normalized[0]?.value || 0);
@@ -512,6 +862,7 @@ function renderFunnel(steps) {
       ${normalized.map((step, i) => {
         const prev  = i > 0 ? Number(normalized[i-1].value || 0) : Number(step.value);
         const val   = Number(step.value || 0);
+        const stageName = String(step.stage || "").replace(/Sessões Engajadas/gi, "Sessões Envolvidas");
         const drop  = i === 0 ? 0 : prev > 0 ? ((prev - val) / prev) * 100 : 0;
         const wpct  = first > 0 ? Math.max((val / first) * 100, 8) : 100;
         const conv  = first > 0 ? (val / first) * 100 : 0;
@@ -523,7 +874,7 @@ function renderFunnel(steps) {
             <div class="funnel-bar-wrap">
               <div class="funnel-bar" style="width:${wpct}%;background:${c.bg}">
                 <div class="funnel-bar-label" style="color:${c.text}">
-                  <strong>${escapeHtml(step.stage)}</strong>
+                  <strong>${escapeHtml(stageName)}</strong>
                   <span>${formatInt(val)}</span>
                 </div>
               </div>

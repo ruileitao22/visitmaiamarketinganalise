@@ -264,7 +264,7 @@ async function fetchGa4Data(authClient) {
   const funnelValues = funnelReport.rows && funnelReport.rows[0] ? funnelReport.rows[0].metricValues : [];
   const funnel = [
     { stage: "Sessões", value: Math.round(parseMetric(funnelValues[0] && funnelValues[0].value)) },
-    { stage: "Sessões Engajadas", value: Math.round(parseMetric(funnelValues[1] && funnelValues[1].value)) },
+    { stage: "Sessões Envolvidas", value: Math.round(parseMetric(funnelValues[1] && funnelValues[1].value)) },
     { stage: "Cliques em Conteúdo", value: Math.round(parseMetric(funnelValues[2] && funnelValues[2].value)) },
     { stage: "Leads/Contactos", value: Math.round(parseMetric(funnelValues[3] && funnelValues[3].value)) }
   ];

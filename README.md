@@ -22,6 +22,10 @@ npm install
 - `GA4_PROPERTY_ID`
 - `GSC_SITE_URL` (ex: `sc-domain:visitmaia.pt`)
 - `GOOGLE_APPLICATION_CREDENTIALS` **ou** `GOOGLE_SERVICE_ACCOUNT_JSON`
+- `SEO_AGENT_WEBHOOK_URL` (URL do webhook do n8n para o Agente SEO)
+- `SEO_AGENT_WEBHOOK_BEARER` (opcional, token Bearer)
+- `SEO_AGENT_WEBHOOK_API_KEY` (opcional, header `x-api-key`)
+- `SEO_AGENT_TIMEOUT_MS` (opcional, default `20000`)
 
 ### Permissões Google necessárias
 
@@ -47,6 +51,8 @@ Servidor: [http://localhost:3000](http://localhost:3000)
 - `GET /api/users` (protegido)
 - `GET /api/dashboard` (protegido)
 - `POST /api/dashboard/sync` (protegido)
+- `GET /api/seo-agent/status` (protegido)
+- `POST /api/seo-agent/chat` (protegido)
 
 ## 5) Atualização diária automática
 
