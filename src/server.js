@@ -298,6 +298,35 @@ app.post("/api/seo-agent/chat", requireAuth, async (req, res) => {
       });
     }
 
+    if (err && err.code === "SEO_AGENT_EMPTY_REPLY") {
+      return res.status(502).json({
+        error: "O n8n respondeu, mas sem texto (reply/output). Verifica o nó Respond to Webhook."
+      });
+    }
+
+    if (err && err.code === "SEO_AGENT_CONNECTION_ERROR") {
+      return res.status(502).json({
+        error: "Não foi possível ligar ao webhook do n8n. Confirma URL/porta e se o n8n está ativo."
+      });
+    }
+
+    if (err && err.code === "SEO_AGENT_UPSTREAM_ERROR") {
+      if (err.status === 401 || err.status === 403) {
+        return res.status(502).json({
+          error: "n8n rejeitou autenticação. Verifica SEO_AGENT_WEBHOOK_BEARER e auth do Webhook."
+        });
+      }
+
+      if (err.status === 404) {
+        return res.status(502).json({
+          error: "Webhook n8n não encontrado (404). Confirma URL e path /webhook/seo-agent."
+        });
+      }
+
+      const message = `n8n devolveu erro HTTP ${err.status}. Verifica execução do workflow no n8n.`;
+      return res.status(502).json({ error: message });
+    }
+
     console.error("[seo-agent] erro ao contactar n8n:", err && err.message ? err.message : err);
     return res.status(502).json({
       error: "Não foi possível obter resposta do Agente SEO no n8n."

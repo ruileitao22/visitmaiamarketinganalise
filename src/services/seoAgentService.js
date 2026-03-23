@@ -82,7 +82,9 @@ async function askSeoAgent({ message, user }) {
   try {
     const payload = {
       message,
+      chatInput: message,
       input: message,
+      text: message,
       source: "visitmaia-dashboard",
       timestamp: new Date().toISOString(),
       user: user
@@ -94,12 +96,20 @@ async function askSeoAgent({ message, user }) {
         : undefined
     };
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: getHeaders(),
-      body: JSON.stringify(payload),
-      signal: controller.signal
-    });
+    let response;
+    try {
+      response = await fetch(url, {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+    } catch (cause) {
+      const err = new Error(`Falha de ligação ao webhook n8n: ${url}`);
+      err.code = "SEO_AGENT_CONNECTION_ERROR";
+      err.cause = cause;
+      throw err;
+    }
 
     const rawText = await response.text();
     let raw = {};
